@@ -1,0 +1,140 @@
+{
+  "name": "Day 6 - Google Sheets Lead Saver",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sheets-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "422c0f3b-69ee-4476-90e0-bd59e917d296",
+      "name": "Webhook",
+      "webhookId": "1038ba95-87d7-4bf2-af48-bd968a5aeb15"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71d40d51-cc0a-4bec-989c-1fc9d01459db",
+              "name": "=name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4f7dfca5-8547-422b-85da-4d201132ddf1",
+              "name": "=email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "1546bc53-0f1c-43c3-9034-321c772aedcd",
+              "name": "=message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b1d7aef2-1871-44f3-95b5-8de649d9b9ce",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://script.google.com/macros/s/AKfycbyrcfSjHOcaDZzvOmiQXoHuryiOs1AikeA7VA2U_LnorDRaw-D8BHp6muvBnAkE8S-W/exec",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $json.name }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"message\": \"{{ $json.message }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e274a5c7-211d-4ea9-888f-ebfb66731309",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"status\": \"saved to sheets\" }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        624,
+        0
+      ],
+      "id": "b2d0d7e6-2618-4abf-ba69-7d7c3c3ef041",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7dbc6be1-91d0-4fb2-9a4c-38f6a9fc137c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b58ec0c16eed38b555d5278e95ecfcce6ff2f831eee26c585422a2b8e01f053e"
+  },
+  "nodeGroups": [],
+  "id": "MwiidP8epUm0ihq0",
+  "tags": []
+}
